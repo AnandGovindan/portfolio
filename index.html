@@ -1,294 +1,966 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anand Govindan | WordPress & Shopify Developer</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>WordPress Developer Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{
-  font-family:'Poppins',sans-serif;
-  background:#0f172a;
-  color:#fff;
+/* ── RESET & ROOT ── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --bg:        #080b10;
+  --surface:   #0f1520;
+  --card:      #121926;
+  --border:    rgba(255,255,255,.07);
+  --accent:    #00f0a0;
+  --accent2:   #0af;
+  --text:      #e8edf5;
+  --muted:     #7a8599;
+  --ff-head:   'Syne', sans-serif;
+  --ff-body:   'DM Sans', sans-serif;
+  --ease:      cubic-bezier(.22,1,.36,1);
+}
+html { scroll-behavior:smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ff-body);
+  font-size: 16px;
+  line-height: 1.65;
+  overflow-x: hidden;
+}
+::selection { background: var(--accent); color: #000; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 4px; }
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content:'';
+  position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
+  background-size: 200px;
+  opacity: .6;
 }
 
-/* NAV */
-nav{
-  position:fixed;
-  width:100%;
-  top:0;
-  background:rgba(0,0,0,0.6);
-  backdrop-filter:blur(10px);
-  padding:15px 30px;
-  display:flex;
-  justify-content:space-between;
-  z-index:1000;
+/* ── CANVAS PARTICLES ── */
+#particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+/* ── LAYOUT ── */
+.container { max-width: 1140px; margin: 0 auto; padding: 0 24px; position:relative; z-index:2; }
+
+/* ── NAV ── */
+nav {
+  position: fixed; top:0; left:0; right:0; z-index:100;
+  padding: 18px 0;
+  transition: background .4s, backdrop-filter .4s;
 }
-nav a{
-  color:#fff;
-  margin:0 10px;
-  text-decoration:none;
+nav.scrolled {
+  background: rgba(8,11,16,.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner { display:flex; align-items:center; justify-content:space-between; }
+.logo {
+  font-family: var(--ff-head); font-size:1.25rem; font-weight:800;
+  color: var(--accent); letter-spacing:-.02em; text-decoration:none;
+}
+.logo span { color: var(--text); }
+.nav-links { display:flex; gap:32px; list-style:none; }
+.nav-links a {
+  color: var(--muted); text-decoration:none; font-size:.9rem; font-weight:500;
+  transition: color .25s;
+  position:relative;
+}
+.nav-links a::after {
+  content:''; position:absolute; bottom:-3px; left:0; right:100%; height:1.5px;
+  background: var(--accent); transition: right .3s var(--ease);
+}
+.nav-links a:hover { color: var(--text); }
+.nav-links a:hover::after { right:0; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh; display:flex; align-items:center;
+  position:relative; overflow:hidden;
+}
+.hero-grid {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:64px; align-items:center;
+  padding: 100px 0 60px;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background: rgba(0,240,160,.08); border:1px solid rgba(0,240,160,.2);
+  color: var(--accent); font-size:.78rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase;
+  padding: 7px 16px; border-radius:100px;
+  margin-bottom:24px;
+  animation: fadeUp .8s var(--ease) both;
+}
+.pulse-dot {
+  width:7px; height:7px; border-radius:50%; background: var(--accent);
+  animation: pulse 1.8s ease infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity:1; transform:scale(1); }
+  50%      { opacity:.4; transform:scale(1.5); }
+}
+.hero-heading {
+  font-family: var(--ff-head); font-size: clamp(2.6rem,5vw,4.2rem);
+  font-weight:800; line-height:1.08; letter-spacing:-.03em;
+  animation: fadeUp .8s .1s var(--ease) both;
+}
+.hero-heading .line2 { color: var(--accent); display:block; }
+.hero-sub {
+  margin-top:20px; font-size:1.05rem; color: var(--muted); max-width:460px;
+  animation: fadeUp .8s .2s var(--ease) both;
+}
+.hero-ctas {
+  margin-top:36px; display:flex; gap:14px; flex-wrap:wrap;
+  animation: fadeUp .8s .3s var(--ease) both;
+}
+.btn-primary {
+  background: var(--accent); color:#000; font-weight:700;
+  padding:13px 30px; border-radius:8px; text-decoration:none;
+  font-size:.95rem; transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 0 28px rgba(0,240,160,.3);
+}
+.btn-primary:hover { transform:translateY(-2px); box-shadow:0 0 40px rgba(0,240,160,.5); }
+.btn-outline {
+  border:1.5px solid var(--border); color: var(--text); font-weight:600;
+  padding:13px 28px; border-radius:8px; text-decoration:none;
+  font-size:.95rem; transition: border-color .25s, background .25s;
+}
+.btn-outline:hover { border-color: var(--accent); background: rgba(0,240,160,.06); }
+
+/* hero right – floating card */
+.hero-visual {
+  display:flex; justify-content:center; align-items:center;
+  animation: fadeUp .8s .2s var(--ease) both;
+}
+.avatar-wrap {
+  position:relative; width:320px; height:320px;
+}
+.avatar-ring {
+  position:absolute; inset:-14px; border-radius:50%;
+  border: 2px solid transparent;
+  background: linear-gradient(135deg, var(--accent), var(--accent2)) border-box;
+  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: destination-out;
+  mask-composite: exclude;
+  animation: spin 10s linear infinite;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
+.avatar-circle {
+  width:100%; height:100%; border-radius:50%;
+  background: linear-gradient(135deg, #1a2a40 0%, #0f1c2e 100%);
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--ff-head); font-size:5.5rem; font-weight:800;
+  color: var(--accent); letter-spacing:-.04em;
+  box-shadow: 0 0 60px rgba(0,240,160,.15);
+}
+.stat-chip {
+  position:absolute; background: var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:10px 16px; display:flex; align-items:center; gap:8px;
+  font-size:.82rem; white-space:nowrap;
+  box-shadow: 0 8px 24px rgba(0,0,0,.4);
+}
+.stat-chip .num { font-family:var(--ff-head); font-size:1.2rem; font-weight:800; color:var(--accent); }
+.chip-tl { top:10px; left:-30px; animation: float1 4s ease-in-out infinite; }
+.chip-br { bottom:10px; right:-30px; animation: float2 4s ease-in-out infinite; }
+@keyframes float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+@keyframes float2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(10px)} }
+
+.hero-scroll-hint {
+  position:absolute; bottom:36px; left:50%; transform:translateX(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:6px;
+  color: var(--muted); font-size:.75rem; letter-spacing:.08em; text-transform:uppercase;
+  animation: fadeIn 1s 1s both;
+}
+.scroll-line {
+  width:1px; height:40px; background:linear-gradient(to bottom,var(--accent),transparent);
+  animation: scrollDrop 1.4s ease-in-out infinite;
+}
+@keyframes scrollDrop { 0%{height:0;opacity:1} 100%{height:40px;opacity:0} }
+
+/* ── SECTION COMMON ── */
+section { padding: 100px 0; }
+.section-label {
+  font-size:.72rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--accent); margin-bottom:14px;
+}
+.section-title {
+  font-family:var(--ff-head); font-size:clamp(2rem,3.5vw,2.9rem);
+  font-weight:800; letter-spacing:-.03em; line-height:1.1;
+}
+.section-sub { color:var(--muted); margin-top:12px; max-width:520px; }
+.section-head { margin-bottom:56px; }
+
+/* ── DIVIDER ── */
+.divider {
+  border:none; height:1px;
+  background: linear-gradient(90deg,transparent,var(--border),transparent);
 }
 
-/* HERO */
-.hero{
-  height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  text-align:center;
-  background:linear-gradient(135deg,#4f46e5,#06b6d4);
+/* ── ABOUT ── */
+#about .grid { display:grid; grid-template-columns:1fr 1fr; gap:80px; align-items:center; }
+.about-text p { color:var(--muted); margin-bottom:16px; }
+.about-text p strong { color:var(--text); }
+.info-list { margin-top:28px; display:flex; flex-direction:column; gap:12px; }
+.info-row {
+  display:flex; gap:12px; align-items:center;
+  font-size:.9rem;
 }
-.hero img{
-  width:140px;
-  height:140px;
-  border-radius:50%;
-  border:4px solid #fff;
-}
-.hero h1{font-size:40px;margin-top:15px;}
+.info-row .key { color:var(--muted); min-width:110px; font-size:.82rem; text-transform:uppercase; letter-spacing:.06em; }
+.info-row .val { color:var(--text); font-weight:500; }
+.highlight { color:var(--accent); font-weight:600; }
 
-.typing{
-  border-right:3px solid #fff;
-  white-space:nowrap;
-  overflow:hidden;
-  width:0;
-  animation:typing 4s steps(30,end) forwards, blink 0.7s infinite;
+.exp-card {
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:32px; position:relative; overflow:hidden;
 }
-@keyframes typing{to{width:350px;}}
-@keyframes blink{50%{border-color:transparent;}}
+.exp-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background: linear-gradient(90deg,var(--accent),var(--accent2));
+}
+.exp-number {
+  font-family:var(--ff-head); font-size:5rem; font-weight:800;
+  line-height:1; color:transparent;
+  -webkit-text-stroke: 2px var(--accent);
+  opacity:.15; position:absolute; right:20px; top:16px;
+}
+.exp-card h3 { font-family:var(--ff-head); font-size:1.5rem; font-weight:700; margin-bottom:8px; }
+.exp-card p { color:var(--muted); font-size:.95rem; }
 
-/* SECTION */
-section{
-  padding:80px 20px;
-  max-width:1100px;
-  margin:auto;
+/* ── SKILLS ── */
+#skills { background:var(--surface); }
+.skills-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:16px; }
+.skill-card {
+  background:var(--card); border:1px solid var(--border); border-radius:14px;
+  padding:22px 24px; transition: border-color .3s, transform .3s;
 }
-h2{
-  text-align:center;
-  margin-bottom:40px;
+.skill-card:hover { border-color:var(--accent); transform:translateY(-4px); }
+.skill-top { display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+.skill-icon {
+  width:40px; height:40px; border-radius:10px;
+  background: rgba(0,240,160,.1); display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem;
 }
-
-/* CARD */
-.card{
-  background:rgba(255,255,255,0.05);
-  border-radius:15px;
-  padding:20px;
-  transition:0.3s;
-  text-align:center;
-}
-.card:hover{
-  transform:translateY(-10px);
-  box-shadow:0 10px 30px rgba(0,0,0,0.5);
-}
-
-/* GRID */
-.skills,.projects{
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-  gap:20px;
-}
-.skills i{
-  font-size:30px;
-  color:#06b6d4;
-  margin-bottom:10px;
+.skill-name { font-family:var(--ff-head); font-weight:700; font-size:.95rem; }
+.skill-cat { font-size:.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:.06em; }
+.bar-bg { background:rgba(255,255,255,.06); height:5px; border-radius:4px; overflow:hidden; }
+.bar-fill {
+  height:100%; border-radius:4px;
+  background: linear-gradient(90deg,var(--accent),var(--accent2));
+  width:0; transition: width 1.2s var(--ease);
 }
 
-/* PROJECT */
-.project img{
-  width:100%;
-  border-radius:10px;
+/* ── SERVICES ── */
+.services-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:20px; }
+.service-card {
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  padding:32px; transition: border-color .3s, transform .3s;
+  position:relative; overflow:hidden; cursor:default;
+}
+.service-card::after {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(circle at 70% 20%, rgba(0,240,160,.06), transparent 60%);
+  opacity:0; transition:opacity .4s;
+}
+.service-card:hover { border-color:var(--accent); transform:translateY(-6px); }
+.service-card:hover::after { opacity:1; }
+.svc-icon { font-size:2rem; margin-bottom:16px; }
+.service-card h3 { font-family:var(--ff-head); font-size:1.1rem; font-weight:700; margin-bottom:8px; }
+.service-card p { color:var(--muted); font-size:.9rem; }
+
+/* ── PROJECTS ── */
+#projects { background:var(--surface); }
+.projects-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:24px; }
+.project-card {
+  background:var(--card); border:1px solid var(--border); border-radius:16px;
+  overflow:hidden; transition: transform .35s var(--ease), box-shadow .35s;
+}
+.project-card:hover { transform:translateY(-8px); box-shadow:0 24px 60px rgba(0,0,0,.5); }
+.project-thumb {
+  height:170px; display:flex; align-items:center; justify-content:center;
+  font-size:3rem; position:relative; overflow:hidden;
+}
+.project-thumb::before {
+  content:''; position:absolute; inset:0; opacity:.6;
+}
+.t1::before { background:linear-gradient(135deg,#0a1628,#0d2440); }
+.t2::before { background:linear-gradient(135deg,#100a28,#1e0a40); }
+.t3::before { background:linear-gradient(135deg,#0a2018,#0a3020); }
+.t4::before { background:linear-gradient(135deg,#281008,#401a08); }
+.t5::before { background:linear-gradient(135deg,#0a1828,#082040); }
+.t6::before { background:linear-gradient(135deg,#200a20,#3a0a38); }
+.thumb-emoji { position:relative; z-index:1; filter:drop-shadow(0 0 12px rgba(0,0,0,.6)); }
+.project-body { padding:22px; }
+.project-body h3 { font-family:var(--ff-head); font-size:1.05rem; font-weight:700; margin-bottom:6px; }
+.project-body p { color:var(--muted); font-size:.88rem; margin-bottom:14px; }
+.tags { display:flex; flex-wrap:wrap; gap:6px; }
+.tag {
+  font-size:.72rem; font-weight:600; text-transform:uppercase; letter-spacing:.05em;
+  padding:4px 10px; border-radius:100px;
+  background:rgba(0,240,160,.08); color:var(--accent); border:1px solid rgba(0,240,160,.15);
 }
 
-/* TIMELINE */
-.timeline{
-  border-left:2px solid #06b6d4;
-  padding-left:20px;
+/* ── EXPERIENCE ── */
+.timeline { position:relative; padding-left:36px; }
+.timeline::before {
+  content:''; position:absolute; left:0; top:8px; bottom:8px; width:2px;
+  background: linear-gradient(to bottom,var(--accent),var(--accent2),transparent);
 }
-.exp{
-  margin-bottom:20px;
+.timeline-item { position:relative; margin-bottom:40px; }
+.timeline-item::before {
+  content:''; position:absolute; left:-42px; top:6px;
+  width:12px; height:12px; border-radius:50%;
+  background:var(--accent); box-shadow:0 0 16px rgba(0,240,160,.5);
+  border:2px solid var(--bg);
+}
+.tl-date { font-size:.78rem; color:var(--accent); font-weight:600; letter-spacing:.06em; text-transform:uppercase; margin-bottom:6px; }
+.tl-role { font-family:var(--ff-head); font-size:1.15rem; font-weight:700; margin-bottom:2px; }
+.tl-company { font-size:.9rem; color:var(--muted); margin-bottom:10px; }
+.tl-desc { color:var(--muted); font-size:.9rem; }
+
+/* ── CONTACT ── */
+#contact .grid { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:start; }
+.contact-info h2 { font-family:var(--ff-head); font-size:2.2rem; font-weight:800; margin-bottom:14px; }
+.contact-info p { color:var(--muted); }
+.contact-links { margin-top:32px; display:flex; flex-direction:column; gap:14px; }
+.contact-link {
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; color:var(--text); font-size:.95rem;
+  padding:14px 18px; border-radius:12px; border:1px solid var(--border);
+  transition:border-color .25s, background .25s, transform .25s;
+}
+.contact-link:hover { border-color:var(--accent); background:rgba(0,240,160,.06); transform:translateX(4px); }
+.contact-link .icon { font-size:1.2rem; width:36px; text-align:center; }
+.contact-form { display:flex; flex-direction:column; gap:14px; }
+.form-group label { display:block; font-size:.8rem; text-transform:uppercase; letter-spacing:.08em; color:var(--muted); margin-bottom:6px; }
+.form-group input, .form-group textarea {
+  width:100%; background:var(--surface); border:1px solid var(--border);
+  border-radius:10px; padding:13px 16px; color:var(--text); font-family:var(--ff-body);
+  font-size:.95rem; outline:none; transition:border-color .25s;
+}
+.form-group input:focus, .form-group textarea:focus { border-color:var(--accent); }
+.form-group textarea { height:120px; resize:vertical; }
+.btn-submit {
+  background:var(--accent); color:#000; font-weight:700; border:none;
+  padding:14px 30px; border-radius:10px; font-size:.95rem; cursor:pointer;
+  font-family:var(--ff-body); transition:transform .2s, box-shadow .2s;
+  box-shadow:0 0 28px rgba(0,240,160,.25);
+}
+.btn-submit:hover { transform:translateY(-2px); box-shadow:0 0 40px rgba(0,240,160,.45); }
+
+/* ── FOOTER ── */
+footer {
+  border-top:1px solid var(--border); padding:32px 0;
+  text-align:center; color:var(--muted); font-size:.85rem;
+}
+footer .foot-name { color:var(--accent); font-weight:600; }
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(30px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity:0; } to { opacity:1; }
+}
+.reveal {
+  opacity:0; transform:translateY(40px);
+  transition: opacity .7s var(--ease), transform .7s var(--ease);
+}
+.reveal.visible { opacity:1; transform:translateY(0); }
+.reveal-left  { opacity:0; transform:translateX(-40px); transition:opacity .7s var(--ease),transform .7s var(--ease); }
+.reveal-right { opacity:0; transform:translateX(40px);  transition:opacity .7s var(--ease),transform .7s var(--ease); }
+.reveal-left.visible, .reveal-right.visible { opacity:1; transform:translate(0); }
+.delay-1 { transition-delay:.1s; }
+.delay-2 { transition-delay:.2s; }
+.delay-3 { transition-delay:.3s; }
+.delay-4 { transition-delay:.4s; }
+.delay-5 { transition-delay:.5s; }
+
+/* ── CURSOR ── */
+.cursor {
+  width:10px; height:10px; border-radius:50%; background:var(--accent);
+  position:fixed; pointer-events:none; z-index:9999;
+  transform:translate(-50%,-50%); transition:transform .08s;
+}
+.cursor-ring {
+  width:38px; height:38px; border-radius:50%; border:1.5px solid rgba(0,240,160,.4);
+  position:fixed; pointer-events:none; z-index:9998;
+  transform:translate(-50%,-50%); transition:transform .18s, width .2s, height .2s, opacity .2s;
 }
 
-/* BUTTON */
-.btn{
-  display:inline-block;
-  margin:10px;
-  padding:12px 25px;
-  background:#06b6d4;
-  border-radius:30px;
-  color:#fff;
-  text-decoration:none;
-  transition:0.3s;
-}
-.btn:hover{
-  background:#0284c7;
-  transform:scale(1.05);
-}
-
-/* WHATSAPP */
-.whatsapp{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  background:#25d366;
-  padding:15px;
-  border-radius:50%;
-  color:#fff;
-  font-size:22px;
-}
-
-/* ANIMATION */
-.fade{
-  opacity:0;
-  transform:translateY(40px);
-  transition:1s;
-}
-.fade.show{
-  opacity:1;
-  transform:translateY(0);
+/* ── RESPONSIVE ── */
+@media (max-width:768px){
+  .hero-grid { grid-template-columns:1fr; text-align:center; gap:40px; }
+  .hero-sub { margin:0 auto 0; }
+  .hero-ctas { justify-content:center; }
+  .avatar-wrap { width:240px; height:240px; }
+  .chip-tl { left:-10px; }
+  .chip-br { right:-10px; }
+  #about .grid { grid-template-columns:1fr; gap:40px; }
+  #contact .grid { grid-template-columns:1fr; }
+  .nav-links { gap:16px; }
+  .nav-links a { font-size:.8rem; }
 }
 </style>
 </head>
-
 <body>
 
-<!-- NAV -->
-<nav>
-  <div><b>Anand Govindan</b></div>
-  <div>
-    <a href="#about">About</a>
-    <a href="#skills">Skills</a>
-    <a href="#services">Services</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- PARTICLES -->
+<canvas id="particles"></canvas>
+
+<!-- ══ NAV ══ -->
+<nav id="navbar">
+  <div class="container nav-inner">
+    <a href="#hero" class="logo">WP<span>Dev</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
   </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <img src="https://images.unsplash.com/photo-1603415526960-f8f0a1d5b7c5">
-  <h1>Anand Govindan</h1>
-  <p class="typing">WordPress & Shopify Developer</p>
-  <p style="max-width:600px;margin-top:15px;">
-    I build high-performance, SEO-friendly websites and eCommerce stores that help businesses grow online.
-  </p>
-  <div>
-    <a href="#projects" class="btn">View Work</a>
-    <a href="#contact" class="btn">Hire Me</a>
-  </div>
-</div>
-
-<!-- ABOUT -->
-<section id="about" class="fade">
-  <h2><i class="fa fa-user"></i> About Me</h2>
-  <div class="card">
-    <p>
-      I am a WordPress and Shopify developer with 2+ years of experience in building responsive,
-      fast, and SEO-optimized websites. I specialize in Elementor, WooCommerce, and Shopify customization.
-    </p>
-  </div>
-</section>
-
-<!-- SKILLS -->
-<section id="skills" class="fade">
-  <h2><i class="fa fa-code"></i> Skills</h2>
-  <div class="skills">
-
-    <div class="card"><i class="fab fa-wordpress"></i><h3>WordPress</h3></div>
-    <div class="card"><i class="fab fa-shopify"></i><h3>Shopify</h3></div>
-    <div class="card"><i class="fa fa-paint-brush"></i><h3>Elementor</h3></div>
-    <div class="card"><i class="fa fa-shopping-cart"></i><h3>WooCommerce</h3></div>
-    <div class="card"><i class="fab fa-html5"></i><h3>HTML</h3></div>
-    <div class="card"><i class="fab fa-css3-alt"></i><h3>CSS</h3></div>
-    <div class="card"><i class="fab fa-js"></i><h3>JavaScript</h3></div>
-    <div class="card"><i class="fa fa-chart-line"></i><h3>SEO</h3></div>
-
-  </div>
-</section>
-
-<!-- SERVICES -->
-<section id="services" class="fade">
-  <h2><i class="fa fa-cogs"></i> Services</h2>
-  <div class="skills">
-
-    <div class="card"><h3>Website Development</h3><p>Professional WP & Shopify websites</p></div>
-    <div class="card"><h3>eCommerce Development</h3><p>Complete online stores</p></div>
-    <div class="card"><h3>Speed Optimization</h3><p>Improve loading & performance</p></div>
-    <div class="card"><h3>Bug Fixing</h3><p>Fix WordPress & plugin issues</p></div>
-
-  </div>
-</section>
-
-<!-- EXPERIENCE -->
-<section class="fade">
-  <h2><i class="fa fa-briefcase"></i> Experience</h2>
-  <div class="timeline">
-    <div class="exp">
-      <h3>WP & Shopify Developer</h3>
-      <p>2024 - Present</p>
-      <p>Built and optimized websites, improved SEO & speed.</p>
-    </div>
-    <div class="exp">
-      <h3>Junior Developer</h3>
-      <p>2023 - 2024</p>
-      <p>Worked on WooCommerce and Shopify setup.</p>
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="pulse-dot"></span>
+          Available for freelance work
+        </div>
+        <h1 class="hero-heading">
+          WordPress<br>
+          <span class="line2" id="typedText"></span>
+        </h1>
+        <p class="hero-sub">
+          Crafting fast, beautiful WordPress websites with clean code, smart SEO, and seamless user experiences — delivering results that drive real business growth.
+        </p>
+        <div class="hero-ctas">
+          <a href="#projects" class="btn-primary">View My Work</a>
+          <a href="#contact" class="btn-outline">Get In Touch</a>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="avatar-wrap">
+          <div class="avatar-ring"></div>
+          <div class="avatar-circle">WP</div>
+          <div class="stat-chip chip-tl">
+            <span class="num">2+</span>
+            <span>Years Experience</span>
+          </div>
+          <div class="stat-chip chip-br">
+            <span class="num">30+</span>
+            <span>Projects Done</span>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects" class="fade">
-  <h2><i class="fa fa-laptop-code"></i> Projects</h2>
-  <div class="projects">
-
-    <div class="card project">
-      <img src="https://images.unsplash.com/photo-1498050108023-c5249f4df085">
-      <h3>Business Website</h3>
-      <p>WordPress Elementor website</p>
-    </div>
-
-    <div class="card project">
-      <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d">
-      <h3>WooCommerce Store</h3>
-      <p>Full eCommerce solution</p>
-    </div>
-
-    <div class="card project">
-      <img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
-      <h3>Shopify Store</h3>
-      <p>Custom Shopify design</p>
-    </div>
-
+  <div class="hero-scroll-hint">
+    <div class="scroll-line"></div>
+    Scroll Down
   </div>
 </section>
 
-<!-- CONTACT -->
-<section id="contact" class="fade contact">
-  <h2><i class="fa fa-envelope"></i> Contact</h2>
-  <p>Let’s build something amazing together.</p>
-  <a href="mailto:anandg.shopy@gmail.com" class="btn">Email Me</a>
-  <a href="https://wa.me/919025086313" class="btn">WhatsApp</a>
+<!-- ══ ABOUT ══ -->
+<section id="about">
+  <div class="container">
+    <div class="grid">
+      <div class="about-text reveal-left">
+        <p class="section-label">About Me</p>
+        <h2 class="section-title" style="margin-bottom:24px">Turning ideas into<br>digital experiences</h2>
+        <p>I'm a passionate <strong>WordPress Developer</strong> with <span class="highlight">2+ years of hands-on experience</span> building custom websites, WooCommerce stores, and SEO-optimised digital solutions that convert visitors into customers.</p>
+        <p>I combine technical expertise with a strong design eye — whether it's a corporate website, an e-commerce store, or a Shopify build, I deliver clean, performant, and maintainable code every time.</p>
+        <div class="info-list">
+          <div class="info-row"><span class="key">Location</span><span class="val">🇮🇳 India</span></div>
+          <div class="info-row"><span class="key">Experience</span><span class="val highlight">2+ Years</span></div>
+          <div class="info-row"><span class="key">Availability</span><span class="val highlight">Open to Work</span></div>
+          <div class="info-row"><span class="key">Languages</span><span class="val">English, Hindi</span></div>
+        </div>
+      </div>
+      <div class="reveal-right">
+        <div class="exp-card">
+          <div class="exp-number">2+</div>
+          <h3>Years of Building the Web</h3>
+          <p>From pixel-perfect themes to performance-tuned WooCommerce stores — I've delivered 30+ projects across e-commerce, business, portfolio, and blog niches, always on time and above expectations.</p>
+          <br/>
+          <p style="color:var(--accent);font-weight:600;font-size:.9rem;">🚀 Let's build something great together.</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-<a href="https://wa.me/919025086313" class="whatsapp">
-  <i class="fab fa-whatsapp"></i>
-</a>
+<hr class="divider"/>
+
+<!-- ══ SKILLS ══ -->
+<section id="skills">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="section-label">Technical Skills</p>
+      <h2 class="section-title">My Toolkit</h2>
+      <p class="section-sub">A well-rounded stack covering front-end, back-end, database, e-commerce, and digital marketing.</p>
+    </div>
+    <div class="skills-grid">
+      <!-- each skill card -->
+      <div class="skill-card reveal delay-1" data-pct="95">
+        <div class="skill-top">
+          <div class="skill-icon">🎨</div>
+          <div>
+            <div class="skill-name">WordPress</div>
+            <div class="skill-cat">CMS · Core Skill</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="95"></div></div>
+      </div>
+      <div class="skill-card reveal delay-2" data-pct="90">
+        <div class="skill-top">
+          <div class="skill-icon">🌐</div>
+          <div>
+            <div class="skill-name">HTML5 & CSS3</div>
+            <div class="skill-cat">Front-end</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="90"></div></div>
+      </div>
+      <div class="skill-card reveal delay-3">
+        <div class="skill-top">
+          <div class="skill-icon">⚡</div>
+          <div>
+            <div class="skill-name">JavaScript</div>
+            <div class="skill-cat">Front-end · Scripting</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="80"></div></div>
+      </div>
+      <div class="skill-card reveal delay-1">
+        <div class="skill-top">
+          <div class="skill-icon">🛢️</div>
+          <div>
+            <div class="skill-name">MySQL</div>
+            <div class="skill-cat">Database</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="78"></div></div>
+      </div>
+      <div class="skill-card reveal delay-2">
+        <div class="skill-top">
+          <div class="skill-icon">🏛️</div>
+          <div>
+            <div class="skill-name">Oracle SQL</div>
+            <div class="skill-cat">Database</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="72"></div></div>
+      </div>
+      <div class="skill-card reveal delay-3">
+        <div class="skill-top">
+          <div class="skill-icon">🛍️</div>
+          <div>
+            <div class="skill-name">Shopify</div>
+            <div class="skill-cat">E-commerce</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="85"></div></div>
+      </div>
+      <div class="skill-card reveal delay-1">
+        <div class="skill-top">
+          <div class="skill-icon">🔍</div>
+          <div>
+            <div class="skill-name">On-Page SEO</div>
+            <div class="skill-cat">Digital Marketing</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="88"></div></div>
+      </div>
+      <div class="skill-card reveal delay-2">
+        <div class="skill-top">
+          <div class="skill-icon">📡</div>
+          <div>
+            <div class="skill-name">Off-Page SEO</div>
+            <div class="skill-cat">Digital Marketing</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="82"></div></div>
+      </div>
+      <div class="skill-card reveal delay-3">
+        <div class="skill-top">
+          <div class="skill-icon">🎭</div>
+          <div>
+            <div class="skill-name">Canva</div>
+            <div class="skill-cat">Design · Graphics</div>
+          </div>
+        </div>
+        <div class="bar-bg"><div class="bar-fill" data-width="90"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ SERVICES ══ -->
+<section id="services">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="section-label">What I Do</p>
+      <h2 class="section-title">Services</h2>
+      <p class="section-sub">End-to-end digital solutions tailored to your business goals.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal delay-1">
+        <div class="svc-icon">🖥️</div>
+        <h3>WordPress Development</h3>
+        <p>Custom themes, plugin development, and full WordPress builds — responsive, fast, and tailored to your brand.</p>
+      </div>
+      <div class="service-card reveal delay-2">
+        <div class="svc-icon">🛒</div>
+        <h3>WooCommerce Stores</h3>
+        <p>Complete WooCommerce setups with payment gateways, inventory management, and conversion-optimised UX.</p>
+      </div>
+      <div class="service-card reveal delay-3">
+        <div class="svc-icon">🛍️</div>
+        <h3>Shopify Development</h3>
+        <p>Shopify store setup, theme customisation, and app integrations to launch your online store quickly.</p>
+      </div>
+      <div class="service-card reveal delay-1">
+        <div class="svc-icon">🔍</div>
+        <h3>SEO Optimisation</h3>
+        <p>On-page & off-page SEO strategies — keyword research, technical SEO, link building, and content planning.</p>
+      </div>
+      <div class="service-card reveal delay-2">
+        <div class="svc-icon">🎨</div>
+        <h3>Web Design & Canva</h3>
+        <p>Eye-catching graphics, social media assets, banners, and visual branding using Canva Pro tools.</p>
+      </div>
+      <div class="service-card reveal delay-3">
+        <div class="svc-icon">⚡</div>
+        <h3>Performance & Maintenance</h3>
+        <p>Speed optimisation, security hardening, regular updates, and ongoing WordPress site maintenance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ PROJECTS ══ -->
+<section id="projects">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="section-label">Portfolio</p>
+      <h2 class="section-title">Featured Projects</h2>
+      <p class="section-sub">A selection of work I'm proud of — each built with care, purpose, and attention to detail.</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal delay-1">
+        <div class="project-thumb t1"><span class="thumb-emoji">🏪</span></div>
+        <div class="project-body">
+          <h3>Fashion E-Commerce Store</h3>
+          <p>A full WooCommerce store with custom theme, product filters, Stripe payment integration, and mobile-first design.</p>
+          <div class="tags">
+            <span class="tag">WordPress</span>
+            <span class="tag">WooCommerce</span>
+            <span class="tag">SEO</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal delay-2">
+        <div class="project-thumb t2"><span class="thumb-emoji">🏢</span></div>
+        <div class="project-body">
+          <h3>Corporate Business Website</h3>
+          <p>Multi-page corporate site with custom Elementor blocks, contact forms, blog, and on-page SEO implementation.</p>
+          <div class="tags">
+            <span class="tag">WordPress</span>
+            <span class="tag">Elementor</span>
+            <span class="tag">On-Page SEO</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal delay-3">
+        <div class="project-thumb t3"><span class="thumb-emoji">🌿</span></div>
+        <div class="project-body">
+          <h3>Organic Food Shopify Store</h3>
+          <p>Shopify store with custom liquid theme edits, product collections, and integrated shipping solutions.</p>
+          <div class="tags">
+            <span class="tag">Shopify</span>
+            <span class="tag">Liquid</span>
+            <span class="tag">CSS</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal delay-1">
+        <div class="project-thumb t4"><span class="thumb-emoji">📰</span></div>
+        <div class="project-body">
+          <h3>News & Blog Platform</h3>
+          <p>High-traffic blog with custom post types, category taxonomy, newsletter integration, and AdSense setup.</p>
+          <div class="tags">
+            <span class="tag">WordPress</span>
+            <span class="tag">MySQL</span>
+            <span class="tag">Off-Page SEO</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal delay-2">
+        <div class="project-thumb t5"><span class="thumb-emoji">🏥</span></div>
+        <div class="project-body">
+          <h3>Healthcare Clinic Website</h3>
+          <p>Doctor appointment booking site with custom forms, Google Maps, schema markup, and HIPAA-friendly design.</p>
+          <div class="tags">
+            <span class="tag">WordPress</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">SEO</span>
+          </div>
+        </div>
+      </div>
+      <div class="project-card reveal delay-3">
+        <div class="project-thumb t6"><span class="thumb-emoji">🎓</span></div>
+        <div class="project-body">
+          <h3>Online Education Platform</h3>
+          <p>LMS website using LearnDash with membership, course management, quizzes, and Stripe subscription billing.</p>
+          <div class="tags">
+            <span class="tag">WordPress</span>
+            <span class="tag">LearnDash</span>
+            <span class="tag">WooCommerce</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ EXPERIENCE ══ -->
+<section id="experience">
+  <div class="container">
+    <div class="section-head reveal">
+      <p class="section-label">Work History</p>
+      <h2 class="section-title">Experience</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;" class="exp-wrap">
+      <div class="timeline reveal-left">
+        <div class="timeline-item">
+          <div class="tl-date">2023 – Present</div>
+          <div class="tl-role">WordPress Developer</div>
+          <div class="tl-company">Freelance / Self-employed</div>
+          <div class="tl-desc">Delivering custom WordPress and Shopify solutions for clients across e-commerce, healthcare, and education niches. Managing full project lifecycle from discovery to deployment.</div>
+        </div>
+        <div class="timeline-item">
+          <div class="tl-date">2022 – 2023</div>
+          <div class="tl-role">Junior WordPress Developer</div>
+          <div class="tl-company">Digital Agency</div>
+          <div class="tl-desc">Built and maintained 10+ client websites, implemented SEO best practices, and collaborated with design teams to create pixel-perfect WordPress themes.</div>
+        </div>
+      </div>
+      <div class="reveal-right" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="exp-card">
+          <div class="exp-number">30+</div>
+          <h3>Projects Delivered</h3>
+          <p>From simple blogs to complex WooCommerce stores with thousands of products.</p>
+        </div>
+        <div class="exp-card" style="margin-top:0;">
+          <div class="exp-number">100%</div>
+          <h3>Client Satisfaction</h3>
+          <p>Repeat clients and referrals — quality and communication are my top priorities.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="container">
+    <div class="grid">
+      <div class="contact-info reveal-left">
+        <p class="section-label">Contact</p>
+        <h2>Let's Work<br>Together</h2>
+        <p style="margin-top:12px;">Have a project in mind? I'd love to hear from you. Send me a message and I'll get back to you within 24 hours.</p>
+        <div class="contact-links">
+          <a href="mailto:yourmail@email.com" class="contact-link">
+            <span class="icon">📧</span>
+            <span>yourmail@email.com</span>
+          </a>
+          <a href="https://wa.me/91XXXXXXXXXX" class="contact-link">
+            <span class="icon">💬</span>
+            <span>WhatsApp Me</span>
+          </a>
+          <a href="https://linkedin.com/in/yourprofile" class="contact-link">
+            <span class="icon">🔗</span>
+            <span>LinkedIn Profile</span>
+          </a>
+          <a href="https://upwork.com/freelancers/yourprofile" class="contact-link">
+            <span class="icon">💼</span>
+            <span>Upwork Profile</span>
+          </a>
+        </div>
+      </div>
+      <div class="contact-form reveal-right">
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" placeholder="John Doe" />
+        </div>
+        <div class="form-group">
+          <label>Email Address</label>
+          <input type="email" placeholder="john@example.com" />
+        </div>
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" placeholder="WordPress project..." />
+        </div>
+        <div class="form-group">
+          <label>Message</label>
+          <textarea placeholder="Tell me about your project..."></textarea>
+        </div>
+        <button class="btn-submit" onclick="handleSubmit(this)">Send Message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="container">
+    <p>© 2025 <span class="foot-name">WordPress Developer</span> · Built with ❤️ &amp; clean code · All rights reserved</p>
+  </div>
+</footer>
 
 <script>
-const faders=document.querySelectorAll('.fade');
-window.addEventListener('scroll',()=>{
-  const trigger=window.innerHeight*0.8;
-  faders.forEach(el=>{
-    if(el.getBoundingClientRect().top<trigger){
-      el.classList.add('show');
+/* ── CUSTOM CURSOR ── */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+});
+(function animRing(){
+  rx += (mx-rx)*.12; ry += (my-ry)*.12;
+  ring.style.left=rx+'px'; ring.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.skill-card,.service-card,.project-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ ring.style.width='56px';ring.style.height='56px'; });
+  el.addEventListener('mouseleave',()=>{ ring.style.width='38px';ring.style.height='38px'; });
+});
+
+/* ── NAV SCROLL ── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll',()=>{ navbar.classList.toggle('scrolled', window.scrollY>50); });
+
+/* ── TYPING ANIMATION ── */
+const phrases = ['Developer.','Designer.','SEO Expert.','Problem Solver.'];
+let pi=0,ci=0,deleting=false;
+const typedEl = document.getElementById('typedText');
+function type(){
+  const cur = phrases[pi];
+  if(!deleting){
+    typedEl.textContent = cur.slice(0,ci+1)+'|';
+    ci++;
+    if(ci===cur.length){ deleting=true; setTimeout(type,1800); return; }
+  } else {
+    typedEl.textContent = cur.slice(0,ci)+'|';
+    ci--;
+    if(ci===0){ deleting=false; pi=(pi+1)%phrases.length; }
+  }
+  setTimeout(type, deleting?60:110);
+}
+type();
+
+/* ── PARTICLE CANVAS ── */
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let W,H,parts=[];
+function resize(){ W=canvas.width=window.innerWidth; H=canvas.height=window.innerHeight; }
+resize(); window.addEventListener('resize',resize);
+function mkPart(){
+  return {
+    x:Math.random()*W, y:Math.random()*H,
+    vx:(Math.random()-.5)*.3, vy:(Math.random()-.5)*.3,
+    r:Math.random()*1.5+.5, o:Math.random()*.5+.1
+  };
+}
+for(let i=0;i<90;i++) parts.push(mkPart());
+function drawParticles(){
+  ctx.clearRect(0,0,W,H);
+  parts.forEach(p=>{
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(0,240,160,${p.o})`;
+    ctx.fill();
+    p.x+=p.vx; p.y+=p.vy;
+    if(p.x<0||p.x>W) p.vx*=-1;
+    if(p.y<0||p.y>H) p.vy*=-1;
+  });
+  // draw lines between close particles
+  for(let i=0;i<parts.length;i++){
+    for(let j=i+1;j<parts.length;j++){
+      const dx=parts[i].x-parts[j].x, dy=parts[i].y-parts[j].y;
+      const d=Math.sqrt(dx*dx+dy*dy);
+      if(d<120){
+        ctx.beginPath();
+        ctx.moveTo(parts[i].x,parts[i].y);
+        ctx.lineTo(parts[j].x,parts[j].y);
+        ctx.strokeStyle=`rgba(0,240,160,${.08*(1-d/120)})`;
+        ctx.lineWidth=.5; ctx.stroke();
+      }
+    }
+  }
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+/* ── SCROLL REVEAL ── */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      // animate skill bars
+      const bar = e.target.querySelector('.bar-fill');
+      if(bar) setTimeout(()=>{ bar.style.width=bar.dataset.width+'%'; },200);
     }
   });
-});
-</script>
+},{threshold:.15});
+document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>observer.observe(el));
 
+/* ── CONTACT SUBMIT ── */
+function handleSubmit(btn){
+  btn.textContent='✓ Message Sent!';
+  btn.style.background='#0af';
+  btn.disabled=true;
+  setTimeout(()=>{ btn.textContent='Send Message →'; btn.style.background=''; btn.disabled=false; },3000);
+}
+
+/* ── RESPONSIVE TIMELINE ── */
+function fixTimeline(){
+  const w = document.querySelector('.exp-wrap');
+  if(!w) return;
+  if(window.innerWidth<768) w.style.gridTemplateColumns='1fr';
+  else w.style.gridTemplateColumns='1fr 1fr';
+}
+fixTimeline(); window.addEventListener('resize',fixTimeline);
+</script>
 </body>
 </html>
